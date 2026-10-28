@@ -12,3 +12,6 @@ dist/
 coverage/
 __pycache__/
 *.py[cod]
+# Private organizer answer key
+DEBUG_REPORT.md
+debug_report.md
