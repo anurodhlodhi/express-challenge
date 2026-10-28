@@ -1,27 +1,35 @@
-# Code Clash — Express Debugging Challenge
+# Express Framework FaultLine Commerce Challenge
+## FaultLine — Commerce Business Application
 
-A Node.js, Express, and SQLite project prepared for the **Code Clash Hackathon**. Find, debug, and fix the issues in the application as part of the challenge.
+### About the Project
+FaultLine is an Express.js-based commerce application developed for a college hackathon. It simulates the backend of an online shopping system and helps students understand how real-world business logic works.
 
-## Getting Started
+### Key Features
+- **Product Management:** Manage products, SKUs, prices, and inventory.
+- **Shopping Cart:** Add products, update quantities, and remove items.
+- **Coupon System:** Apply discount codes and validate coupon rules.
+- **Order Management:** Create orders, calculate totals, and handle cancellations.
+- **Mock Payments:** Simulate payment confirmation, failures, and refunds.
+- **Repository Pattern:** Separate database operations from business logic.
+- **Audit Logs:** Track important business operations.
 
-```bash
-npm install
-```
+### Technology Stack
+- JavaScript (Node.js)
+- Express.js
+- SQLite
+- npm
+- Automated Testing
 
-Create a local `.env` file using the configuration provided by the organizers. Keep `.env` private and never commit it.
+### Business Workflow
+**Browse Products → Add to Cart → Apply Coupon → Checkout → Create Order → Simulate Payment**
 
-## Run the App
+### Hackathon Objective
+The goal is to investigate software bugs, understand business rules, debug faulty behavior, and implement reliable fixes. Students can test API endpoints, inspect application logic, and verify their solutions using automated tests.
 
-```bash
-npm start
-```
+### Important Notice
+All payment operations are simulated. The application does not collect real payments or transfer money.
 
-The application initializes its local SQLite database on startup.
+**Project:** FaultLine Express Challenge  
+**Purpose:** Learn Express.js, commerce business logic, API development, and software debugging.
 
-## Challenge Guidelines
 
-- Explore the code and reproduce the reported issues.
-- Fix bugs without breaking existing functionality.
-- Test your changes before submitting.
-
-**Good luck, and happy debugging!**
