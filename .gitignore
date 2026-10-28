@@ -1,0 +1,14 @@
+
+node_modules/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+data/*.sqlite
+data/*.sqlite3
+npm-debug.log*
+dist/
+coverage/
+__pycache__/
+*.py[cod]
