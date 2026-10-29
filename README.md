@@ -129,13 +129,6 @@ Follow the prompts to create a local Django administrator account.
 bash
 python manage.py runserver 127.0.0.1:8000
 
-
-Open the following URLs in your browser:
-
-Customer shop: http://127.0.0.1:8000/shop/
-Django admin: http://127.0.0.1:8000/admin/
-API health check: http://127.0.0.1:8000/api/health/
-
 Stop the development server with Ctrl+C.
 
 Business Workflow
