@@ -1,157 +1,49 @@
-FaultLine — Commerce Business Application
-About the Project
+# The Code Clash 2026 · FaultLine Commerce (Express.js)
 
-FaultLine Commerce is a Django-based commerce application developed for the Code Clash 2026 individual debugging challenge. It simulates the backend and customer-facing workflows of an online shopping platform, allowing participants to investigate defects, understand business logic, and implement reliable fixes while preserving existing functionality.
+This is the Express.js track of the individual debugging round. You have 120 minutes to investigate and improve the supplied application while preserving working behavior. Use only agents and resources approved by the organisers. Payments are simulated.
 
-This repository uses Django and Django REST Framework (DRF). It is a separate track from the Express.js and FastAPI versions of the challenge.
+## Explore the app
 
-Key Features
-Product Management: Browse products and manage product prices, stock, and validation rules.
-Shopping Cart: Add products, update quantities, remove items, and maintain cart consistency.
-Coupon System: Apply percentage-based or fixed-value discounts with date restrictions, minimum spend requirements, and usage limits.
-Order Management: Create complete orders with price snapshots, validate checkout operations, and handle cancellations.
-Inventory Management: Validate available stock during checkout and restore inventory correctly after eligible cancellations.
-Simulated Payments: Validate payment references and amounts, confirm simulated payments, and process refunds.
-Customer Accounts: Support customer sign-in, order history, and customer-specific order access.
-Django Admin Panel: Manage products, coupons, carts, orders, payments, and audit history through the protected admin interface.
-REST API: Expose commerce functionality through Django REST Framework endpoints.
-Audit Logs: Record important business operations for tracking and debugging.
-Automated Testing: Use public tests and additional regression tests to verify business rules and prevent unintended changes.
-Technology Stack
-Python 3.10+
-Django
-Django REST Framework
-SQLite or the configured project database
-pytest
-pip and Python virtual environments
+The application uses Node.js, Express and SQLite. JSON endpoints under `/api` support product browsing, session-based carts, coupon validation, order creation, simulated payments and refunds. The root `/` returns service information; health checks are available at `/health` and `/api/health`.
 
-The project dependencies are documented in requirements.txt, with tested dependency versions provided in requirements.lock.
+This checkout does not currently expose a customer shop or admin interface. The admin routes and view templates are placeholders. Use this track's source and public tests rather than the Django or FastAPI routes and demo accounts.
 
-Application Interfaces
-Interface	Path	Purpose
-Customer Shop	/shop/	Browse products, sign in, manage carts, apply coupons, and view orders
-Django Admin	/admin/	Manage commerce records and review audit history
-REST API	/api/	Access commerce endpoints
-Health Check	/api/health/	Check application health
-Setup and Installation
-Prerequisites
+For requests protected by CSRF, first call `GET /api/csrf`, keep the session cookie, and send the returned `token` in the `x-csrf-token` header using the same session.
 
-Install Python 3.10 and ensure the Python launcher (py) is available on Windows. On macOS or Linux, use python3.10.
+## Setup with Node.js 22 or newer
 
-1. Create a virtual environment
+Install Node.js 22 or newer and npm. The locked `better-sqlite3` dependency requires Node.js >=22. Run these commands from this directory in PowerShell:
 
-Windows PowerShell
-
-powershell
-py -3.10 -m venv .venv
-
-
-macOS/Linux
-
-bash
-python3.10 -m venv .venv
-
-2. Install dependencies
-
-Windows PowerShell
-
-powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-
-
-macOS/Linux
-
-bash
-.venv/bin/python -m pip install -r requirements.txt
-
-3. Configure environment variables
-
-Windows PowerShell
-
-powershell
+~~~powershell
+npm ci
 Copy-Item .env.example .env
+node scripts/seed-demo.js
+npm test
+npm start
+~~~
 
+On macOS/Linux use `cp .env.example .env` instead of `Copy-Item`; the other commands are the same. Set a local `SESSION_SECRET` in `.env` before starting the app. Visit http://localhost:3000/, http://localhost:3000/health or http://localhost:3000/api/products. Stop the server with Ctrl+C. Use `npm run dev` to restart the server automatically when source files change.
 
-macOS/Linux
+The database connection creates the SQLite database and applies `src/db/schema.sql` automatically. With the example environment settings, the database is stored at `data/faultline.sqlite`. The seed script adds three demo products if their SKUs are absent; it does not create customer accounts, admin accounts or coupons. Never submit `.env` or a local database.
 
-bash
-cp .env.example .env
+`package.json` defines dependencies and commands; `package-lock.json` pins the dependency versions used by `npm ci`. Tests use Node.js's built-in test runner and Supertest.
 
+## Business rules
 
-Configure local environment settings as required. Never commit .env, credentials, or local database files.
+- Money uses integer paise in the API and database.
+- Product prices, stock and cart quantities must satisfy validation rules. Adding the same product increases its cart quantity.
+- Cart totals multiply unit prices by quantities and remain consistent after updates and removals.
+- Coupons may be percentage or fixed value and can have expiry dates, minimum spend, discount caps and usage limits.
+- Checkout must validate stock, create a complete order with price snapshots or make no change, and clear the cart after success.
+- Simulated payments must preserve the correct order state for their outcome. Refunds apply only to successful payments and must not be processed twice.
+- Cart operations use the browser session. Preserve session handling and CSRF protections when fixing defects.
 
-4. Apply database migrations
+Start with public tests in `tests/` and add your own regression tests when useful. Inspect `src/api/`, `src/services/` and `src/db/` for this track's routes, request fields and data model. `CHALLENGE_SPEC.md` is currently empty in this checkout; follow any additional specification supplied by the organisers.
 
-Windows PowerShell
+## Submission and evaluation
 
-powershell
-.\.venv\Scripts\python.exe manage.py migrate
+Edit application code, add tests and document fixes. Do not alter protected evaluator files or fixtures, hardcode judge data, or bypass authentication and CSRF. Work individually under the announced tool policy.
 
+Submit the final source ZIP in the organiser's format, including completed `DEBUG_REPORT.md` and `SUBMISSION.json` when supplied or required by the organisers. These files are not included in this checkout. Exclude `.env`, credentials, databases, `node_modules`, caches and private tests. Stop editing at the official 16:00 freeze; the next 15 minutes are for collection. The organiser's timestamped ZIP is the primary submission.
 
-macOS/Linux
-
-bash
-.venv/bin/python manage.py migrate
-
-5. Seed demo data
-bash
-python manage.py seed_demo
-
-
-Use the appropriate virtual-environment Python executable for your operating system. The seed command creates demo products, coupons, and customers when they do not already exist.
-
-The documented demo passwords are password_a and password_b. Use these accounts only in the local development environment.
-
-6. Run Django system checks
-bash
-python manage.py check
-
-7. Run the automated tests
-bash
-python -m pytest tests/ -q
-
-
-For the exact challenge setup, run these commands using the virtual-environment Python executable rather than a system-wide Python installation.
-
-8. Create an administrator
-bash
-python manage.py createsuperuser
-
-
-Follow the prompts to create a local Django administrator account.
-
-9. Start the development server
-bash
-python manage.py runserver 127.0.0.1:8000
-
-Stop the development server with Ctrl+C.
-
-Business Workflow
-
-Browse Products → Sign In → Add to Cart → Apply Coupon → Checkout → Create Order → Confirm Simulated Payment → View Order History
-
-Eligible cancellations and refunds follow the application's payment, inventory, and reference-validation rules.
-
-Business Rules and Validation
-
-The application must preserve the following business invariants:
-
-Money is represented as integer paise in the API and database, while customer-facing pages display rupees.
-Product prices, stock quantities, and cart quantities must satisfy the documented validation rules.
-Adding the same product repeatedly increases its quantity in the existing cart.
-Checkout validates current inventory and either creates a complete order with price snapshots and clears the cart or makes no changes.
-Coupons must respect their discount type, validity dates, minimum spend, and usage limits.
-Cancellation must respect payment state and restore inventory no more than once.
-Simulated payment confirmations and refunds must validate references and amounts.
-Customers must not be able to access another customer's orders.
-Staff operations must enforce the required permissions and CSRF protections.
-
-Refer to CHALLENGE_SPEC.md for the exact routes, request fields, response formats, status codes, and admin behavior.
-
-Automated Testing and Debugging
-
-The challenge requires participants to investigate defects in the supplied application and implement fixes without breaking working behavior.
-
-Recommended debugging process:
-
-Read `CHALLENGE
+The debug report should describe failures found, files changed, reasons for fixes, public tests run, remaining issues and permitted agent tools used. The announced ranking order is correctly resolved defects, fewer regressions, code quality and then completion time. Faculty and organisers control final policy and allowed tools.
