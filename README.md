@@ -100,11 +100,6 @@ python manage.py seed_demo
 
 Use the appropriate virtual-environment Python executable for your operating system. The seed command creates demo products, coupons, and customers when they do not already exist.
 
-Demo customer accounts:
-
-Customer A: a@test.invalid
-Customer B: b@test.invalid
-
 The documented demo passwords are password_a and password_b. Use these accounts only in the local development environment.
 
 6. Run Django system checks
